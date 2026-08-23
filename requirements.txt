@@ -1,0 +1,12 @@
+fastapi==0.141.1
+langchain_community==0.4.2
+langchain_core==1.5.5
+langchain_google_genai==4.3.4
+langgraph==1.2.11
+pydantic==2.13.4
+python-dotenv==1.2.2
+reportlab==5.0.0
+Requests==2.34.2
+sseclient==0.0.27
+streamlit==1.61.1
+uvicorn==0.52.3
