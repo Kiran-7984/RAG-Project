@@ -118,10 +118,8 @@ async def decide_retrieval(state: "State"):
 #     )
 #     return {"need_retrieval": decision.should_retrieve}
 
-
 def route_after_decide(state: State) -> Literal["generate_direct", "retrieve"]:
     return "retrieve" if state["need_retrieval"] else "generate_direct"
-
 
 def retrieve_node(state: State) -> State:
     q = state.get("retrieval_query","") or state["question"]
@@ -278,7 +276,6 @@ rewrite_prompt = ChatPromptTemplate.from_messages(
         ("human", "Question: {question}"),
     ]
 )
-
 rewrite_chain = rewrite_prompt | llm.with_structured_output(WebQuery)
 
 async def rewrite_query_node(state: State) -> State:
@@ -301,7 +298,6 @@ def web_search_node(state: State) -> State:
         web_docs.append(Document(page_content=text, metadata={"url": url, "title": title}))
 
     return {"web_docs": web_docs}
-
 
 answer_prompt = ChatPromptTemplate.from_messages(
     [
@@ -412,17 +408,17 @@ rewrite_for_retrieval_prompt = ChatPromptTemplate.from_messages(
     [
         (
             "system",
-            "Rewrite the user's QUESTION into a query optimized for vector retrieval over INTERNAL company PDFs.\n\n"
+            "Rewrite the user's QUESTION into a concise query optimized for retrieval from internal documents.\n\n"
             "Rules:\n"
-            "- Keep it short (6–16 words).\n"
-            "- Preserve key entities (e.g., NexaAI, plan names).\n"
-            "- Add 2–5 high-signal keywords that likely appear in policy/pricing docs.\n"
-            "- Remove filler words.\n"
-            "- Do NOT answer the question.\n"
-            "- Output JSON with key: retrieval_query\n\n"
-            "Examples:\n"
-            "Q: 'Do NexaAI plans include a free trial?'\n"
-            "-> {{'retrieval_query': 'NexaAI free trial duration trial period plans'}}\n\n"
+            "- Preserve all important entities, names, terms, and intent.\n"
+            "- Keep the query between 6–16 words.\n"
+            "- Add 2–5 high-signal keywords relevant to the question.\n"
+            "- Remove unnecessary filler words.\n"
+            "- Do NOT answer or change the meaning of the question.\n"
+            "- Return ONLY valid JSON with the key: retrieval_query.\n\n"
+            "Example:\n"
+            "Q: 'What benefits are included in the employee plan?'\n"
+            "-> {\"retrieval_query\": \"employee plan benefits coverage included\"}"
         ),
         (
             "human",

@@ -59,5 +59,5 @@ async def query(req: QueryRequest):
         issup=res.get("issup"),
         need_retrieval = res.get("need_retrieval"),
         rewrite_tries = res.get("rewrite_tries"),
-        web_docs = res.get("web_docs",[]),
+        web_docs = res.get("web_docs"),
     )
