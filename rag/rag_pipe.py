@@ -25,7 +25,7 @@ logging.basicConfig(level=logging.INFO)
 class LLMException(Exception):
     pass
 
-async def safe_llm_invoke(chain, inputs, retries=2, delay=2, label=""):
+async def safe_llm_invoke(chain, inputs, retries=2, delay=1, label=""):
     for attempt in range(1, retries + 1):
         try:
             return await chain.ainvoke(inputs)
