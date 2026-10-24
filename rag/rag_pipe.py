@@ -394,7 +394,7 @@ MAX_RETRIES = 2
 def route_after_issup(state: State) -> Literal["accept_answer", "revise_answer","no_answer"]:
     if state.get("issup") == "fully_supported":
         return "accept_answer"
-    if state.get("rewrite_tries", 0) >= MAX_RETRIES:
+    if state.get("rewrite_tries", 0) >= MAX_RETRIES or state["issup"] == "no_support":
         return "no_answer"
 
     return "revise_answer"
