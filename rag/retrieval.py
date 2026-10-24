@@ -11,8 +11,6 @@ PDF_PATH = BASE_DIR / "data" / "novatech_mini_rag_test.pdf"
 docs = PyPDFLoader(str(PDF_PATH)).load()
 
 chunks = RecursiveCharacterTextSplitter(chunk_size=900, chunk_overlap=150).split_documents(docs)
-for d in chunks:
-    d.page_content = d.page_content.encode("utf-8", "ignore").decode("utf-8", "ignore")
 
 
 embeddings = GoogleGenerativeAIEmbeddings(model="gemini-embedding-001")
