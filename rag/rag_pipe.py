@@ -161,6 +161,7 @@ async def doc_relevance(state: State) -> State:
     q = state["question"]
     scores: List[float] = []
     good: List[Document] = []
+    Docs = state["docs"]
 
     # for d in state["docs"]:
     #     out = await safe_llm_invoke(doc_eval_chain, {"question": q, "chunk": d.page_content}, label="doc_relevance")
@@ -169,11 +170,11 @@ async def doc_relevance(state: State) -> State:
     #     if out.score > LOWER_TH:
     #         good.append(d)
 
-    numbered = "\n\n".join(f"[{i}] {d.page_content}" for i, d in enumerate(docs))
+    numbered = "\n\n".join(f"[{i}] {d.page_content}" for i, d in enumerate(Docs))
     out = await safe_llm_invoke(doc_eval_chain, {"question": q, "chunks": numbered}, label="doc_relevance")
     scores = out.scores
 
-    good = [d for d, s in zip(docs, scores) if s > LOWER_TH]
+    good = [d for d, s in zip(Docs, scores) if s > LOWER_TH]
 
     if any(s > UPPER_TH for s in scores):
         return {
